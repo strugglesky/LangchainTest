@@ -13,21 +13,20 @@ from langchain_core.prompts import PromptTemplate
 
 # ---------- 1. 创建带两个占位符的模板 ----------
 template = PromptTemplate.from_template(
-    "你是一个专业的{role}工程师，请回答我的问题给出回答，我的问题是：{question}"
+    "你是一个专业的{role}工程师，我的姓名是{name},请回答我的问题给出回答，我的问题是：{question}"
 )
 
 # ---------- 2. partial(role="python开发")：固定 role，得到「新模板」----------
 # 新模板只剩 {question} 需要填，适合多轮只换问题、不换角色的场景
-partial = template.partial(role="python开发")
-print(partial)
-print(type(partial))
-print()
+partial1 = template.partial(role="python开发")
+partial2 = partial1.partial(name='yyy')
 
-# ---------- 3. 对新模板 format，只传 question 即可 ----------
-prompt = partial.format(question="冒泡排序怎么写？")
+print(partial2)
+print(type(partial2))
+
+prompt = partial2.format(question="冒泡排序怎么写？")
 print(prompt)
 print(type(prompt))
-
 """
 【输出示例】
 input_variables=['question'] input_types={} partial_variables={'role': 'python开发'} template='你是一个专业的{role}工程师，请回答我的问题给出回答，我的问题是：{question}'

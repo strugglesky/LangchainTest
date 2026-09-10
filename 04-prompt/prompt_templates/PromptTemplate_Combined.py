@@ -16,6 +16,7 @@ template1 = (
     + "内容不超过{length}个字"
 )
 prompt1 = template1.format(topic="LangChain", length=100)
+print(type(prompt1))
 print(prompt1)
 
 # ---------- 2. 方式二：两个独立模板相加，再一起 format ----------
