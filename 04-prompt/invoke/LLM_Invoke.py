@@ -36,6 +36,7 @@ messages = [
     ),
     HumanMessage(content="简单介绍下广告法，一句话告知50字以内"),
 ]
+print(type(messages[0]))
 
 # ---------- 3. 同步调用模型（invoke）----------
 # invoke(messages)：把上面这条 Prompt 发给模型，阻塞等待直到模型推理完成，返回一条 AIMessage。

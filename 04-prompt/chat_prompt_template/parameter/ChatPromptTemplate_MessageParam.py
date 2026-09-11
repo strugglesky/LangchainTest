@@ -23,6 +23,9 @@ chat_prompt = ChatPromptTemplate(
 # 传入占位符变量，得到消息列表
 message = chat_prompt.format_messages(name="亮仔", question="什么是LangChain")
 print(message)
+print(type(message))
+print(type(message[0]))
+print(type(message[1]))
 
 """
 【输出示例】

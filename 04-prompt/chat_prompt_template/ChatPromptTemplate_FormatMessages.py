@@ -15,6 +15,7 @@ from langchain_core.prompts import ChatPromptTemplate
 chat_prompt = ChatPromptTemplate.from_messages(
     [("system", "你是一个{role}，请回答我提出的问题"), ("human", "请回答:{question}")]
 )
+print(type(chat_prompt))
 
 # ---------- 方式一：format_messages ----------
 # 下面两种写法完全等价，都是把 role、question 传给模板里的 {role}、{question}：

@@ -20,6 +20,7 @@ chat_prompt = ChatPromptTemplate.from_messages(
 )
 message = chat_prompt.format_messages(name="小问", question="什么是LangChain")
 print("from_messages:", message)
+print(type(message))
 
 # ---------- 方式二：构造函数（传入同样字典列表，效果一致）----------
 chat_prompt2 = ChatPromptTemplate(
@@ -30,6 +31,7 @@ chat_prompt2 = ChatPromptTemplate(
 )
 message2 = chat_prompt2.format_messages(name="小问", question="什么是LangChain")
 print("构造函数:", message2)
+print(type(message2))
 
 """
 【输出示例】

@@ -11,10 +11,8 @@
 from langchain_core.prompts import PromptTemplate
 
 # ---------- 1. 方式一：一个 from_template 与一段字符串用 + 拼接 ----------
-template1 = (
-    PromptTemplate.from_template("请用一句话介绍{topic}，要求通俗易懂\n")
-    + "内容不超过{length}个字"
-)
+template1 = PromptTemplate.from_template("请用一句话介绍{topic}，要求通俗易懂\n") + "内容不超过{length}个字"
+print(type(template1))
 prompt1 = template1.format(topic="LangChain", length=100)
 print(type(prompt1))
 print(prompt1)

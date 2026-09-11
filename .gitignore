@@ -1,3 +1,10 @@
+# Ignore environment variable files
+.env
+.env.*
 *.env
 
-.idea
+# 忽略 IDEA/PyCharm 配置文件夹
+.idea/
+
+# 忽略所有 .iml 模块文件
+*.iml
