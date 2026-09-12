@@ -19,6 +19,7 @@ import os
 from typing import TypedDict, Annotated
 from dotenv import load_dotenv
 from langchain.chat_models import init_chat_model
+from numba.core.cgutils import sizeof
 
 load_dotenv(encoding="utf-8")
 
@@ -50,7 +51,9 @@ resp = llm_with_structured_output.invoke(messages)
 print(
     resp
 )  # 得到符合 AnimalList 的 dict，如 {"animals": [{"animal": "猫", "emoji": "🐱"}, ...]}
-
+print(type(resp))
+print(type(resp["animals"]))
+print(len(resp["animals"]))
 """
 【输出示例】
 {'animals': [{'animal': '狗', 'emoji': '🐶'}, {'animal': '猫', 'emoji': '🐱'}, {'animal': '鸟', 'emoji': '🐦'}]}
