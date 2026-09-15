@@ -41,7 +41,6 @@ chain = prompt | llm | parser
 
 # 记忆组件：内存实现，进程内有效，重启后丢失
 history = InMemoryChatMessageHistory()
-
 # 包装链为「带历史」版本：本例固定返回同一个 history，重点先放在“自动读写历史”
 runnable = RunnableWithMessageHistory(
     chain,

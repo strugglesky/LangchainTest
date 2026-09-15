@@ -30,6 +30,7 @@ llm = init_chat_model(
 
 # 按 session_id 保存多份历史，便于多用户/多会话；生产可改为 Redis 等
 store = {}
+print(type(store))
 
 
 def get_session_history(session_id: str):
