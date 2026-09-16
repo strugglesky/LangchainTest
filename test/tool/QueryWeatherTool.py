@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv(encoding="utf-8")
 
+@tool
 def get_weather(location: str) -> str:
     """
         查询指定城市的即时天气。
@@ -41,4 +42,3 @@ def get_weather(location: str) -> str:
 # 本地测试：单参数工具可直接传值；若和更通用的工具调用风格保持一致，也可传 {"loc": "..."}
 # result = get_weather.invoke("shanghai")
 result = get_weather.invoke("beijing")
-print(result)
