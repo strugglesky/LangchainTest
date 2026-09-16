@@ -20,7 +20,8 @@ import os
 import httpx
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
-
+from langchain_core.runnables import RunnableLambda
+from loguru import logger
 load_dotenv()
 
 from langchain_classic.agents import create_tool_calling_agent
@@ -48,6 +49,15 @@ def get_weather(loc):
     data = response.json()
     print(json.dumps(data))
     return json.dumps(data)
+
+def peek(label: str) -> RunnableLambda:
+    """返回一个透传节点：打印当前流经的数据，然后原样交给下一个节点。"""
+
+    def _peek(x):
+        logger.info(f"【{label} {type(x)}】{x}")
+        return x  # 关键：原样返回，链路行为不变
+
+    return RunnableLambda(_peek)
 
 
 # 初始化大模型，用于理解用户问题并决定是否调用工具、如何组合结果
