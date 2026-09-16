@@ -17,8 +17,6 @@ import httpx
 from dotenv import load_dotenv
 
 load_dotenv(encoding="utf-8")
-
-
 # @tool 装饰器：函数名 get_weather 即工具名，下方 docstring 会成为模型理解工具的重要依据
 @tool
 def get_weather(loc: str) -> str:

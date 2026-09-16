@@ -1,18 +1,3 @@
-"""
-【案例】使用 Redis Stack 持久化对话历史：RunnableWithMessageHistory + RedisChatMessageHistory
-
-对应教程章节：第 16 章 - 记忆与对话历史 → 6、案例代码 → 6.2 持久化：Redis 存储 → Redis Stack 示例
-
-本示例与 Memory_RedisChatMessageHistory.py 的链路完全相同，仅默认连接 Redis Stack 常见宿主机端口 26379。
-Redis Stack 与原生 Redis 协议兼容，本章对话历史仍然只是把消息写进 Redis；它最大的教学价值是方便你借助 RedisInsight 观察会话数据。
-项目依赖更推荐使用 langchain-redis；若本地环境仍只有 langchain-community，本示例会自动回退，便于旧环境继续运行。
-
-知识点速览：
-- 默认 REDIS_URL=redis://localhost:26379（Redis Stack 常见映射 -p 26379:6379）。
-- 启动 Redis Stack（带 RedisInsight 用 redis/redis-stack）：docker run -d --name redis-stack -p 26379:6379 -p 8001:8001 redis/redis-stack
-- 其余用法同 Memory_RedisChatMessageHistory.py；变化的是默认端口，不是记忆原理。
-"""
-
 from dotenv import load_dotenv
 
 load_dotenv(encoding="utf-8")
@@ -35,29 +20,29 @@ except ModuleNotFoundError:
 
     USE_LANGCHAIN_REDIS = False
 
-# 默认连接 Redis Stack（端口 26379）；可通过环境变量 REDIS_URL 覆盖
+# 支持环境变量 REDIS_URL；未设置时默认 localhost:6379（标准 Redis），教程 Docker 可能用 26379
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
 FORCE_SAVE = os.getenv("REDIS_FORCE_SAVE", "0") == "1"
 
 
 def _check_redis():
-    """启动时检查 Redis/Redis Stack 是否可达，不可达时给出明确提示后退出。"""
+    """启动时检查 Redis 是否可达，不可达时给出明确提示后退出。"""
     try:
         r = redis.Redis.from_url(REDIS_URL, decode_responses=True)
         r.ping()
         r.close()
     except (redis.ConnectionError, redis.ResponseError) as e:
         logger.error(
-            "Redis Stack / Redis 连接失败（{}）。请先启动 Redis Stack，例如：\n"
-            "  docker run -d --name redis-stack -p 26379:6379 -p 8001:8001 redis/redis-stack\n"
-            "若使用原生 Redis 或其他端口，可设置环境变量：REDIS_URL=redis://localhost:端口",
+            "Redis 连接失败（{}）。请先启动 Redis，例如：\n"
+            "  docker run -d -p 6379:6379 redis\n"
+            "若使用其他端口，可设置环境变量：REDIS_URL=redis://localhost:端口",
             REDIS_URL,
         )
         raise SystemExit(1) from e
 
-
 _check_redis()
 
+# 原生 Redis 客户端，decode_responses=True 使返回值为 str 而非 bytes
 redis_client = redis.Redis.from_url(REDIS_URL, decode_responses=True)
 logger.info(
     "Redis 历史实现：{} | REDIS_URL={}",
@@ -75,7 +60,6 @@ prompt = ChatPromptTemplate.from_messages(
     [MessagesPlaceholder("history"), ("human", "{question}")]
 )
 
-
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
     """为每个 session_id 创建/返回对应的 Redis 历史实例，实现持久化存储。"""
     if USE_LANGCHAIN_REDIS:
@@ -88,7 +72,6 @@ def get_session_history(session_id: str) -> BaseChatMessageHistory:
         url=REDIS_URL,
     )
 
-
 chain = RunnableWithMessageHistory(
     prompt | llm,
     get_session_history,
@@ -96,19 +79,16 @@ chain = RunnableWithMessageHistory(
     history_messages_key="history",
 )
 config = RunnableConfig(configurable={"session_id": "user-001"})
-
-print("开始对话（Redis Stack 版，输入 'quit' 退出）")
+print("开始对话（输入 'quit' 退出）")
 while True:
     question = input("\n输入问题：")
     if question.lower() in ["quit", "exit", "q"]:
         break
     response = chain.invoke({"question": question}, config)
     logger.info(f"AI回答:{response.content}")
-    # 和原生 Redis 版一样，手动 SAVE 只是可选演示动作，不是记忆原理的一部分。
+    # 可选：把 Redis 当前内存快照刷到磁盘，方便演示“Redis 重启后仍能恢复”。
+    # 这不是多轮记忆生效的必要条件，真实项目也不建议在每轮对话后都手动 SAVE。
     if FORCE_SAVE:
         redis_client.save()
 
-"""
-【输出示例】
-开始对话（Redis Stack 版，输入 'quit' 退出）
-"""
+

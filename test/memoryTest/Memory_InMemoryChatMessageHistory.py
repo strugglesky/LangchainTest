@@ -18,10 +18,17 @@ llm = init_chat_model(
 history = InMemoryChatMessageHistory()
 
 history.add_user_message("你好 我是张三")
-ai_message = llm.invoke(history.messages)
-logger.info(f"第一次回答\n{ai_message.content}")
+ai_message01 = llm.invoke(history.messages)
+logger.info(f"第一次回答\n{ai_message01.content}")
 # 手动把 AI 回复写回 history；否则下一轮只会看到用户消息，达不到“多轮记忆”的效果
-history.add_message(ai_message)
+history.add_message(ai_message01)
 
 history.add_user_message("我叫什么？")
-llm.invoke(history.messages)
+ai_message02 = llm.invoke(history.messages)
+logger.info(f'第二次回答\n{ai_message02.content}')
+history.add_message(ai_message02)
+
+print("\n===== 历史消息 =====")
+for message in history.messages:
+    print(f"[{message.type}] {message.content}")
+
