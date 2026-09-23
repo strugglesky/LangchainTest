@@ -67,3 +67,5 @@ if __name__ == "__main__":
 - STDIO 模式需由 MCP 客户端（如 Cursor、Claude Desktop）启动本进程并接管 stdin/stdout；
   在终端单独运行时没有客户端发送 JSON-RPC，收到回车等会解析失败，属正常现象。
 """
+
+
