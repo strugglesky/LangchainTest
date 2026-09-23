@@ -27,7 +27,7 @@ embeddingsModel = DashScopeEmbeddings(
 # 2. 连接已有索引（与 RedisVectorStore.py 中 index_name、redis_url 一致）
 vector_store = RedisVectorStore(
     embeddingsModel,
-    config=RedisConfig(index_name="newsgroups", redis_url="redis://localhost:26379"),
+    config=RedisConfig(index_name="newsgroups", redis_url="redis://localhost:6379"),
 )
 
 # 3. 查询文本 → 向量化 → 在库中做相似度检索；这里取前 3 条结果

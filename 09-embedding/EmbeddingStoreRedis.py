@@ -40,7 +40,7 @@ documents = [
 vector_store = Redis.from_documents(
     documents=documents,
     embedding=embeddings,
-    redis_url="redis://localhost:26379",
+    redis_url="redis://localhost:6379",
     index_name="my_index11",
 )
 

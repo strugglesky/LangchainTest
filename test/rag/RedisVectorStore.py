@@ -30,10 +30,6 @@ texts = [
     "我喜欢用苹果手机",
 ]
 
-
-# 批量转成向量：这里只是为了先观察向量维度和内容；真正写入时 add_texts 内部会再次完成向量化
-embeddings = embeddingsModel.embed_documents(texts)
-
 # 定义每条文本对应的元数据信息；真实 RAG 中这些 metadata 往往来自 Document.metadata，也可作为来源展示或过滤条件
 metadata = [{"segment_id": str(i)} for i in range(1, len(texts) + 1)]
 
