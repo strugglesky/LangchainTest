@@ -71,7 +71,7 @@ print(f"文档个数:{len(texts)}")
 vector_store = Redis.from_documents(
     documents=texts,
     embedding=embeddings,
-    redis_url="redis://localhost:26379",
+    redis_url="redis://localhost:6379",
     index_name="my_index3",
 )
 
